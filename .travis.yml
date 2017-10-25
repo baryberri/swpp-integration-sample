@@ -24,13 +24,13 @@ before_install:
 
 install:
   - pip install django coverage coveralls
-  - cd frontend && npm install && npm install -g coveralls @angular/cli && cd ..
+  - cd frontend && npm install && npm install coveralls && npm install -g @angular/cli && cd ..
 
 before_script:
   - cd backend && python manage.py migrate && cd ..
 
 script:
-  - cd backend && coverage run --branch manage.py test && cd ..
+  - cd backend && coverage run --branch --source="./example" manage.py test && cd ..
   - cd frontend && ng test --code-coverage --watch false && ng e2e && cd ..
 
 after_success:
