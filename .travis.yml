@@ -17,7 +17,7 @@ before_install:
 
 install:
   - pip install django coverage coveralls
-  - cd frontend && npm install && npm install coveralls && cd ..
+  - cd frontend && npm install && npm install coveralls @angular/cli && cd ..
 
 before_script:
   - cd backend && python manage.py migrate && cd ..
