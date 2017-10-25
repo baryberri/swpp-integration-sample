@@ -11,6 +11,12 @@ addons:
     packages:
       - google-chrome-stable
 
+cache:
+  pip: true
+  npm: true
+  directories:
+    - frontend/node_modules
+
 before_install:
   - export CHROME_BIN=/usr/bin/google-chrome
   - export DISPLAY=:99.0
@@ -25,8 +31,8 @@ before_script:
 
 script:
   - cd backend && coverage run --branch manage.py test && cd ..
-  - cd frontend && ng test --coverage --watch false && ng e2e && cd ..
+  - cd frontend && ng test --code-coverage --watch false && ng e2e && cd ..
 
 after_success:
-  - coveralls
+  - cd backend && coveralls && cd ..
   - cat ./frontend/coverage/lcov.info | ./frontend/node_modules/coveralls/bin/coveralls.js
