@@ -35,4 +35,4 @@ script:
 
 after_success:
   - cd backend && coveralls && cd ..
-  - cat ./frontend/coverage/lcov.info | ./frontend/node_modules/coveralls/bin/coveralls.js
+  - cd frontend && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && cd ..
