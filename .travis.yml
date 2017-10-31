@@ -17,22 +17,26 @@ cache:
   directories:
     - frontend/node_modules
 
+env:
+  - TARGET=frontend
+  - TARGET=backend
+
 before_install:
   - export CHROME_BIN=/usr/bin/google-chrome
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
 
 install:
-  - pip install django coverage coveralls
-  - cd frontend && npm install && npm install coveralls && npm install -g @angular/cli && cd ..
+  - if [ "$TARGET" = "backend" ]; then pip install django coverage coveralls; fi
+  - if [ "$TARGET" = "frontend" ]; then cd frontend && npm install && npm install coveralls && npm install -g @angular/cli && cd ..; fi
 
 before_script:
-  - cd backend && python manage.py migrate && cd ..
+  - if [ "$TARGET" = "backend" ]; then cd backend && python manage.py migrate && cd ..; fi
 
 script:
-  - cd backend && coverage run --branch --source="./example" manage.py test && cd ..
-  - cd frontend && ng test --code-coverage --watch false && ng e2e && cd ..
+  - if [ "$TARGET" = "backend" ]; then cd backend && coverage run --branch --source="./example" manage.py test && cd ..; fi
+  - if [ "$TARGET" = "frontend" ]; then cd frontend && ng test --code-coverage --watch false && ng e2e && cd ..; fi
 
 after_success:
-  - cd backend && coveralls && cd ..
-  - cd frontend && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && cd ..
+  - if [ "$TARGET" = "backend" ]; then cd backend && coveralls && cd ..; fi
+  - if [ "$TARGET" = "frontend" ]; then cd frontend && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && cd ..; fi
